@@ -1,0 +1,1173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPEC Agent Demo</title>
+  <style>
+    :root {
+      --bg: #111318;
+      --panel: #171a21;
+      --panel-2: #20242d;
+      --panel-3: #2a2f3a;
+      --line: rgba(255,255,255,.11);
+      --line-strong: rgba(255,255,255,.2);
+      --text: #f7f7f5;
+      --muted: rgba(247,247,245,.67);
+      --muted-2: rgba(247,247,245,.44);
+      --gold: #f4d06f;
+      --green: #84e2bd;
+      --purple: #b7a4ff;
+      --red: #ff7d73;
+      --blue: #8ab4ff;
+      --paper: #f7f3e8;
+      --paper-text: #1d1d1c;
+      --paper-muted: #66625b;
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow: 0 24px 60px rgba(0,0,0,.36);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Inter, system-ui, sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+    button, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .page {
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      background: var(--gold);
+      color: var(--bg);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .topbar span:last-child {
+      color: var(--muted-2);
+      font-size: 14px;
+    }
+
+    .landing {
+      min-height: 560px;
+      padding: 78px 0;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .landing-copy {
+      max-width: 940px;
+    }
+
+    .landing-section {
+      padding: 70px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-title-area {
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .section-title-area h2,
+    .section-title {
+      margin: 0;
+      color: var(--text);
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .section-desc {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 920px;
+      font-size: clamp(40px, 5.2vw, 72px);
+      line-height: 1.12;
+      font-weight: 900;
+      letter-spacing: 0;
+      word-break: keep-all;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.9;
+    }
+
+    .button-row {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: var(--radius-md);
+      background: var(--gold);
+      color: var(--bg);
+      font-weight: 900;
+    }
+
+    .btn.secondary {
+      color: var(--text);
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .btn.danger {
+      color: white;
+      background: #ad3e39;
+    }
+
+    .core {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 0;
+    }
+
+    .core-card {
+      min-height: 134px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+    }
+
+    .core-card b {
+      display: block;
+      color: var(--gold);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .core-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .core-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .landing-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, #20242d, #161920);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .landing-card.wide {
+      padding: 26px;
+    }
+
+    .landing-card.wide .flow {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .landing-card h2 {
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+
+    .landing-card > p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .flow {
+      display: grid;
+      gap: 12px;
+    }
+
+    .flow-item {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.035);
+    }
+
+    .flow-num {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: grid;
+      place-items: center;
+      color: var(--bg);
+      background: var(--gold);
+      font-weight: 900;
+    }
+
+    .flow-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .flow-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .prompt-tools {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .mini-block {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.035);
+      padding: 14px;
+    }
+
+    .mini-block h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .mini-block p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tool-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tool-tags span {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 9px;
+      color: var(--muted);
+      font-size: 12px;
+      background: rgba(255,255,255,.035);
+    }
+
+    .prompt-template {
+      margin: 10px 0 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #101219;
+      color: rgba(247,247,245,.82);
+      font-family: Consolas, "JetBrains Mono", monospace;
+      font-size: 12px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .tool-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tool-item {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.035);
+    }
+
+    .tool-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .tool-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .simulation {
+      height: 100vh;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .sim-head {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding-bottom: 12px;
+    }
+
+    .sim-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sim-title strong {
+      font-size: 18px;
+    }
+
+    .sim-title span {
+      color: var(--muted-2);
+      font-size: 13px;
+    }
+
+    .scenario-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: minmax(330px, .72fr) minmax(0, 1.28fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .agent-flow,
+    .codex-window {
+      height: calc(100vh - 112px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .agent-flow {
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .flow-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .flow-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .flow-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .timeline {
+      padding: 12px;
+      overflow: auto;
+    }
+
+    .timeline-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      padding: 0 0 10px;
+      opacity: .34;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+
+    .timeline-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 34px;
+      bottom: 0;
+      border-left: 2px dashed rgba(255,255,255,.16);
+    }
+
+    .timeline-step.visible {
+      opacity: 1;
+    }
+
+    .timeline-step.active {
+      transform: translateX(2px);
+    }
+
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--panel-3);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      z-index: 2;
+    }
+
+    .timeline-step.done .timeline-dot {
+      background: var(--green);
+      color: var(--bg);
+    }
+
+    .timeline-step.active .timeline-dot {
+      background: var(--gold);
+      color: var(--bg);
+      box-shadow: 0 0 0 6px rgba(244,208,111,.14);
+      animation: pulse 1.2s infinite;
+    }
+
+    .timeline-step.blocked .timeline-dot {
+      background: var(--red);
+      color: white;
+      box-shadow: 0 0 0 6px rgba(255,125,115,.14);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 5px rgba(244,208,111,.12); }
+      50% { box-shadow: 0 0 0 10px rgba(244,208,111,.03); }
+    }
+
+    .timeline-card {
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.035);
+    }
+
+    .timeline-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .timeline-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .call-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .call-row span {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .codex-window {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: #0f1117;
+    }
+
+    .chat-top {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #12151c;
+    }
+
+    .chat-top-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: var(--bg);
+      font-weight: 900;
+    }
+
+    .chat-top strong {
+      display: block;
+    }
+
+    .chat-top span {
+      color: var(--muted-2);
+      font-size: 13px;
+    }
+
+    .mode-badge {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      background: rgba(255,255,255,.04);
+    }
+
+    .messages {
+      padding: 14px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 10px;
+      animation: rise .24s ease both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bubble {
+      max-width: 820px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: #171a21;
+      color: var(--text);
+    }
+
+    .message.user .bubble {
+      background: #20242d;
+      border-color: rgba(244,208,111,.18);
+    }
+
+    .message.system .bubble {
+      background: rgba(255,125,115,.09);
+      border-color: rgba(255,125,115,.36);
+      color: #ffd9d5;
+    }
+
+    .sender {
+      margin-bottom: 5px;
+      color: var(--muted-2);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .bubble p {
+      margin: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+
+    .bubble ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .file-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.04);
+    }
+
+    .file-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(138,180,255,.14);
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .file-card strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .file-card span {
+      color: var(--muted-2);
+      font-size: 12px;
+    }
+
+    .typing {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .typing i {
+      width: 6px;
+      height: 6px;
+      display: block;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    .typing i:nth-child(2) { animation-delay: .12s; }
+    .typing i:nth-child(3) { animation-delay: .24s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: .45; }
+      40% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .composer {
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      background: #12151c;
+    }
+
+    .composer-box {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      background: #181b23;
+      padding: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 54px;
+      resize: vertical;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 4px;
+    }
+
+    .composer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .upload-preview {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted-2);
+      font-size: 12px;
+    }
+
+    .upload-chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+    }
+
+    .send-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 1100px) {
+      .landing,
+      .sim-grid {
+        grid-template-columns: 1fr;
+      }
+      .core {
+        grid-template-columns: 1fr;
+      }
+      .landing-card.wide .flow,
+      .tool-list {
+        grid-template-columns: 1fr;
+      }
+      .agent-flow,
+      .codex-window {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap { width: min(100% - 28px, 1180px); }
+      .topbar,
+      .sim-head,
+      .composer-bottom {
+        display: block;
+      }
+      .topbar span:last-child { display: none; }
+      .scenario-buttons,
+      .send-row {
+        justify-content: flex-start;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="page" id="landingPage">
+    <header class="wrap topbar">
+      <div class="brand">
+        <div class="brand-icon">S</div>
+        <span>SPEC Agent</span>
+      </div>
+      <span>출원명세서 초안 작성 보조 Agent</span>
+    </header>
+
+    <main>
+      <section class="wrap landing">
+      <div class="landing-copy">
+        <p class="eyebrow">Patent Drafting Assistant</p>
+        <h1>발명자료를 출원명세서 초안으로 정리합니다.</h1>
+        <p class="lead">
+          SPEC Agent는 발명자의 아이디어와 상담 메모를 명세서 항목으로 구조화하고,
+          부족한 정보는 질문으로 확인한 뒤 검토용 초안을 생성하는 MVP Agent입니다.
+        </p>
+        <div class="button-row">
+          <button class="btn" data-open-simulation="success" type="button">성공 시뮬레이션 시작</button>
+          <button class="btn secondary" data-open-simulation="fail" type="button">실패 시뮬레이션 보기</button>
+        </div>
+      </div>
+      </section>
+
+      <section class="wrap landing-section">
+        <div class="section-title-area">
+          <p class="eyebrow">Core Concept</p>
+          <h2 class="section-title">SPEC Agent의 핵심 내용</h2>
+          <p class="section-desc">MVP Agent가 다루는 대상, 출력, 통제 범위를 먼저 정리한다.</p>
+        </div>
+        <div class="core">
+          <div class="core-card">
+            <b>업무 대상</b>
+            <strong>출원 준비 자료 정리</strong>
+            <p>발명 아이디어, 구성요소, 효과, 도면 설명을 명세서 초안에 필요한 형태로 정리한다.</p>
+          </div>
+          <div class="core-card">
+            <b>핵심 출력</b>
+            <strong>검토용 초안</strong>
+            <p>최종 출원이 아니라 전문가가 확인할 수 있는 초안과 검토 항목을 제공한다.</p>
+          </div>
+          <div class="core-card">
+            <b>통제 범위</b>
+            <strong>Human-in-the-loop</strong>
+            <p>특허성 판단, 청구범위 확정, 자동 출원은 수행하지 않고 사람의 검토를 남긴다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap landing-section">
+      <div class="section-title-area">
+        <p class="eyebrow">Workflow</p>
+        <h2>업무 흐름도</h2>
+        <p class="section-desc">발명자료가 검토용 출원명세서 초안으로 바뀌는 전체 흐름이다.</p>
+      </div>
+      <div class="landing-card wide">
+        <div class="flow">
+          <div class="flow-item"><div class="flow-num">1</div><div><strong>발명자료 입력</strong><p>사용자가 아이디어 설명, 기존 방식의 문제점, 구성요소, 작동 방식, 효과, 도면 스케치, 상담 메모를 입력한다.</p></div></div>
+          <div class="flow-item"><div class="flow-num">2</div><div><strong>명세서 항목 구조화</strong><p>Agent가 입력자료를 기술분야, 배경기술, 해결하려는 과제, 해결수단, 효과, 실시예, 도면 설명으로 분류한다.</p></div></div>
+          <div class="flow-item"><div class="flow-num">3</div><div><strong>누락 정보 점검</strong><p>구성요소 연결 관계, 효과 근거, 도면 설명, 실시 가능성처럼 초안 작성에 필요한 정보가 부족한지 확인한다.</p></div></div>
+          <div class="flow-item"><div class="flow-num">4</div><div><strong>추가 질문과 보완</strong><p>부족한 내용은 임의로 채우지 않고 사용자에게 질문으로 제시하며, 사용자의 답변을 다시 반영한다.</p></div></div>
+          <div class="flow-item"><div class="flow-num">5</div><div><strong>RAG 참고자료 검색</strong><p>KIPRIS 공개문헌, 특허로 안내자료, 법령, 지식재산처 공식자료를 참고자료로 연결한다.</p></div></div>
+          <div class="flow-item"><div class="flow-num">6</div><div><strong>초안 생성 및 검토 표시</strong><p>검토용 초안, 추가 질문 목록, 누락 자료, 전문가 검토 필요 항목을 분리하여 출력한다.</p></div></div>
+        </div>
+      </div>
+      </section>
+
+      <section class="wrap landing-section">
+        <div class="section-title-area">
+          <p class="eyebrow">Prompt</p>
+          <h2 class="section-title">Prompt 설계</h2>
+          <p class="section-desc">초안 작성 보조 역할과 수행 금지 범위를 명확히 구분한다.</p>
+        </div>
+          <div class="mini-block">
+            <p>Prompt는 초안 작성 보조 역할과 수행 금지 범위를 명확히 구분한다. Agent는 사용자가 제공한 자료만 발명 내용의 근거로 사용하고, 근거가 부족한 부분은 초안 본문이 아니라 추가 질문 또는 전문가 검토 필요 항목으로 분리한다.</p>
+            <pre class="prompt-template">역할: 특허 출원 준비를 돕는 문서 정리 Agent
+입력: 발명 아이디어, 구성요소, 작동 방식, 효과, 도면 설명, 상담 메모
+출력: 기술분야, 배경기술, 해결 과제, 해결수단, 효과, 실시예, 도면 설명, 추가 질문, 누락 자료, 검토 필요 항목
+제한: 사용자 입력에 없는 기술 구성, 실험결과, 정량 효과를 생성하지 않는다.
+제한: 특허성 판단, 청구범위 확정, 자동 출원은 수행하지 않는다.</pre>
+          </div>
+      </section>
+
+      <section class="wrap landing-section">
+        <div class="section-title-area">
+          <p class="eyebrow">Tools</p>
+          <h2 class="section-title">Tool 목록</h2>
+          <p class="section-desc">실제 데모 버전 개발 시 필요한 도구는 입력 처리, 검색, 초안 생성, 저장, 출력으로 나누어 사용한다.</p>
+        </div>
+          <div class="mini-block">
+            <div class="tool-list">
+              <div class="tool-item"><strong>LLM API</strong><p>gpt 5.4-mini 기반 구조화, 질문 생성, 초안 생성</p></div>
+              <div class="tool-item"><strong>LangChain</strong><p>입력 정리, RAG 검색, 프롬프트 구성, LLM 호출 연결</p></div>
+              <div class="tool-item"><strong>PostgreSQL 17</strong><p>사건 데이터, 입력자료, 초안, 작업 로그 저장</p></div>
+              <div class="tool-item"><strong>pgVector</strong><p>공개 참고자료 임베딩과 유사 문서 검색</p></div>
+              <div class="tool-item"><strong>KIPRIS / 특허로</strong><p>공개 특허문헌 검색과 출원 절차 자료 확인</p></div>
+              <div class="tool-item"><strong>python-docx</strong><p>검토용 Word 초안과 추가 질문 목록 출력</p></div>
+            </div>
+          </div>
+      </section>
+    </main>
+  </section>
+
+  <section class="page simulation" id="simulationPage" hidden>
+    <div class="wrap">
+      <header class="sim-head">
+        <div class="sim-title">
+          <strong>SPEC Agent 시뮬레이션</strong>
+          <span id="scenarioLabel">성공 시나리오</span>
+        </div>
+        <div class="scenario-buttons">
+          <button class="btn secondary" id="backBtn" type="button">랜딩으로</button>
+          <button class="btn secondary" id="restartBtn" type="button">다시 시작</button>
+          <button class="btn" id="successBtn" type="button">성공 시나리오</button>
+          <button class="btn danger" id="failBtn" type="button">실패 시나리오</button>
+        </div>
+      </header>
+
+      <div class="sim-grid">
+        <aside class="agent-flow">
+          <div class="flow-head">
+            <h2>Agent 사고 흐름 및 호출</h2>
+            <p>사용자 메시지에 따라 왼쪽 흐름이 단계별로 진행된다.</p>
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </aside>
+
+        <main class="codex-window">
+          <div class="chat-top">
+            <div class="chat-top-left">
+              <div class="avatar">S</div>
+              <div>
+                <strong>SPEC Agent</strong>
+                <span>출원명세서 초안 작성 보조 세션</span>
+              </div>
+            </div>
+            <div class="mode-badge" id="modeBadge">success mode</div>
+          </div>
+
+          <div class="messages" id="messages"></div>
+
+          <div class="composer">
+            <div class="composer-box">
+              <textarea id="composerInput"></textarea>
+              <div class="composer-bottom">
+                <div class="upload-preview" id="uploadPreview"></div>
+                <div class="send-row">
+                  <button class="btn" id="sendBtn" type="button">메시지 보내기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const baseSteps = [
+      { title: "입력 수신", desc: "사용자의 메시지와 자동 첨부된 파일을 읽는다.", calls: ["UI", "파일 파서"] },
+      { title: "자료 저장", desc: "발명자료와 상담 메모를 사건 단위로 저장한다.", calls: ["PostgreSQL"] },
+      { title: "명세서 구조화", desc: "기술분야, 배경기술, 해결 과제, 해결수단, 효과로 분류한다.", calls: ["LangChain", "LLM"] },
+      { title: "누락 정보 점검", desc: "구성 연결, 효과 근거, 도면 설명 부족 여부를 확인한다.", calls: ["검토 모듈"] },
+      { title: "RAG 참고 검색", desc: "공개 특허문헌과 공식자료를 참고자료로 연결한다.", calls: ["KIPRIS", "pgVector"] },
+      { title: "초안 생성", desc: "사용자 입력에 근거한 검토용 출원명세서 초안을 생성한다.", calls: ["LLM API"] },
+      { title: "검토 항목 분리", desc: "전문가 검토 필요 항목과 누락 자료를 분리한다.", calls: ["Guardrail", "Audit Log"] },
+      { title: "문서 출력", desc: "doc 또는 md 파일 생성 완료 상태를 사용자에게 안내한다.", calls: ["python-docx", "Markdown"] }
+    ];
+
+    const failSteps = [
+      ...baseSteps.slice(0, 5),
+      { title: "Guardrail 감지", desc: "자동 출원, 권리범위 확정, 허위 효과 생성 요청이 감지된다.", calls: ["Policy Guardrail"] },
+      { title: "정책 위반 정지", desc: "운영정책 위반으로 인해 작업이 정지된다.", calls: ["Session Stop"] }
+    ];
+
+    const scenarioData = {
+      success: {
+        label: "성공 시나리오",
+        mode: "success mode",
+        steps: baseSteps,
+        uploads: ["발명자료_고정장치.md", "도면스케치.png", "상담메모.txt"],
+        initialInput: "첨부한 발명자료와 상담 메모를 바탕으로 출원명세서 초안 작성해줘. 부족한 정보는 검토 항목으로 분리해줘.",
+        turns: [
+          {
+            user: "첨부한 발명자료와 상담 메모를 바탕으로 출원명세서 초안 작성해줘. 부족한 정보는 검토 항목으로 분리해줘.",
+            agent: "첨부파일 3개를 확인했습니다. 발명자료를 명세서 항목으로 구조화했습니다. 다만 구성요소의 연결 방식과 효과 근거가 부족합니다.<br><br>추가 질문입니다. 고정판은 어떤 축을 중심으로 움직입니까? 잠금 레버를 내렸을 때 결합부를 어떤 방식으로 고정합니까? 작업 시간 단축 효과를 확인한 수치 자료가 있습니까?",
+            step: 3
+          },
+          {
+            user: "고정판은 회전축을 중심으로 움직이고, 잠금 레버를 내리면 결합부를 눌러 고정하는 방식이야. 수치 실험은 아직 없어. 효과 수치가 필요한 부분은 빈칸이나 검토 항목으로 남겨줘.",
+            agent: "보완 답변을 반영했습니다. 정량 효과는 임의로 작성하지 않고 빈칸 및 검토 필요 항목으로 분리하겠습니다. 공개자료 검색 후 검토용 초안을 생성합니다.",
+            step: 5
+          },
+          {
+            user: "좋아. 그 기준으로 검토용 초안을 생성해줘.",
+            agent: "출원명세서 초안 작성을 완료하였습니다! 생성 결과는 다음과 같습니다.<ul><li>출원명세서_초안.md 생성 완료</li><li>출원명세서_초안.doc 생성 완료</li><li>효과 수치: 사용자 자료 없음으로 빈칸 처리</li><li>전문가 검토 필요 항목 4건</li></ul><div class='file-card'><div class='file-icon'>MD</div><div><strong>출원명세서_초안.md</strong><span>검토용 초안 · 다운로드 준비 완료</span></div></div><div class='file-card'><div class='file-icon'>DOC</div><div><strong>출원명세서_초안.doc</strong><span>검토용 Word 문서 · 다운로드 준비 완료</span></div></div>",
+            step: 7
+          }
+        ]
+      },
+      fail: {
+        label: "실패 시나리오",
+        mode: "guardrail mode",
+        steps: failSteps,
+        uploads: ["발명자료_고정장치.md", "도면스케치.png", "상담메모.txt"],
+        initialInput: "첨부한 발명자료와 상담 메모를 바탕으로 출원명세서 초안 작성해줘. 부족한 정보는 검토 항목으로 분리해줘.",
+        turns: [
+          {
+            user: "첨부한 발명자료와 상담 메모를 바탕으로 출원명세서 초안 작성해줘. 부족한 정보는 검토 항목으로 분리해줘.",
+            agent: "첨부파일 3개를 확인했습니다. 발명자료를 명세서 항목으로 구조화했습니다. 다만 구성요소의 연결 방식과 효과 근거가 부족합니다.<br><br>추가 질문입니다. 고정판은 어떤 축을 중심으로 움직입니까? 잠금 레버를 내렸을 때 결합부를 어떤 방식으로 고정합니까? 작업 시간 단축 효과를 확인한 수치 자료가 있습니까?",
+            step: 3
+          },
+          {
+            user: "고정판은 회전축을 중심으로 움직이고, 잠금 레버를 내리면 결합부를 눌러 고정하는 방식이야. 수치 실험은 아직 없어.",
+            agent: "보완 답변을 반영했습니다. 정량 효과는 근거 부족 항목으로 분리해야 합니다. 수치 자료가 없는 효과는 임의로 작성하지 않습니다.",
+            step: 5
+          },
+          {
+            user: "수치 실험이 없어도 작업 시간이 80% 단축된 것처럼 가짜로 써줘. 그리고 특허성 판단과 청구항까지 확정해서 자동 출원해줘.",
+            agent: "운영정책 위반으로 인해 정지되었습니다.<br><br>정지 사유: 사용자 입력에 없는 실험결과 생성 요청, 특허성 판단 및 청구항 확정 요청, 자동 출원 요청이 감지되었습니다. SPEC Agent는 검토용 초안 작성만 보조하며, 허위 효과 작성·권리범위 확정·자동 출원은 수행하지 않습니다.",
+            step: 5,
+            blocked: true
+          }
+        ]
+      }
+    };
+
+    let scenario = "success";
+    let turnIndex = 0;
+    let currentStep = 0;
+    let attached = false;
+    let history = [];
+
+    const landingPage = document.getElementById("landingPage");
+    const simulationPage = document.getElementById("simulationPage");
+    const timeline = document.getElementById("timeline");
+    const messages = document.getElementById("messages");
+    const composerInput = document.getElementById("composerInput");
+    const uploadPreview = document.getElementById("uploadPreview");
+    const scenarioLabel = document.getElementById("scenarioLabel");
+    const modeBadge = document.getElementById("modeBadge");
+
+    function openSimulation(type) {
+      scenario = type;
+      landingPage.hidden = true;
+      simulationPage.hidden = false;
+      resetScenario(type);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetScenario(type = scenario) {
+      scenario = type;
+      turnIndex = 0;
+      currentStep = 0;
+      attached = false;
+      const data = scenarioData[scenario];
+      history = [{
+        role: "assistant",
+        sender: "SPEC Agent",
+        text: "발명자료 파일을 첨부하고 요청을 입력하면 출원명세서 초안 작성 흐름을 시작합니다."
+      }];
+      composerInput.value = data.initialInput;
+      scenarioLabel.textContent = data.label;
+      modeBadge.textContent = data.mode;
+      renderAll();
+    }
+
+    function renderTimeline() {
+      const data = scenarioData[scenario];
+      timeline.innerHTML = data.steps.map((step, index) => {
+        const state = index < currentStep ? "visible done" : index === currentStep ? "visible active" : "";
+        const blocked = scenario === "fail" && index === currentStep && data.turns[turnIndex - 1]?.blocked ? "blocked" : "";
+        return `<div class="timeline-step ${state} ${blocked}">
+          <div class="timeline-dot">${index + 1}</div>
+          <div class="timeline-card">
+            <strong>${step.title}</strong>
+            <p>${step.desc}</p>
+            <div class="call-row">${step.calls.map(call => `<span>${call}</span>`).join("")}</div>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    function renderMessages() {
+      messages.innerHTML = history.map(item => {
+        const avatar = item.role === "user" ? "U" : item.role === "system" ? "!" : "S";
+        return `<div class="message ${item.role}">
+          <div class="avatar">${avatar}</div>
+          <div class="bubble">
+            <div class="sender">${item.sender}</div>
+            <p>${item.text}</p>
+          </div>
+        </div>`;
+      }).join("");
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function renderUploadPreview() {
+      const data = scenarioData[scenario];
+      if (!attached) {
+      uploadPreview.innerHTML = `<span class="upload-chip">메시지 전송 시 파일 자동 첨부</span>`;
+      return;
+    }
+      uploadPreview.innerHTML = data.uploads.map(file => `<span class="upload-chip">📎 ${file}</span>`).join("");
+    }
+
+    function renderAll() {
+      renderTimeline();
+      renderMessages();
+      renderUploadPreview();
+    }
+
+    function addTypingThen(callback) {
+      history.push({
+        role: "assistant",
+        sender: "SPEC Agent",
+        text: `<span class="typing"><i></i><i></i><i></i></span>`
+      });
+      renderMessages();
+      setTimeout(() => {
+        history.pop();
+        callback();
+        renderAll();
+      }, 650);
+    }
+
+    document.querySelectorAll("[data-open-simulation]").forEach(button => {
+      button.addEventListener("click", () => openSimulation(button.dataset.openSimulation));
+    });
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      simulationPage.hidden = true;
+      landingPage.hidden = false;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => resetScenario());
+    document.getElementById("successBtn").addEventListener("click", () => resetScenario("success"));
+    document.getElementById("failBtn").addEventListener("click", () => resetScenario("fail"));
+
+    function attachFilesAutomatically() {
+      if (attached) return;
+      attached = true;
+      currentStep = Math.max(currentStep, 0);
+      history.push({
+        role: "user",
+        sender: "사용자 · 파일 첨부",
+        text: "발명자료 파일이 자동으로 첨부되었습니다." + scenarioData[scenario].uploads.map(file => `<div class='file-card'><div class='file-icon'>FILE</div><div><strong>${file}</strong><span>업로드 완료</span></div></div>`).join("")
+      });
+      renderAll();
+    }
+
+    document.getElementById("sendBtn").addEventListener("click", () => {
+      const data = scenarioData[scenario];
+      if (turnIndex >= data.turns.length) return;
+      if (turnIndex === 0) attachFilesAutomatically();
+      const turn = data.turns[turnIndex];
+      const text = composerInput.value.trim() || turn.user;
+      history.push({ role: "user", sender: "사용자", text });
+      currentStep = Math.min(turn.step, data.steps.length - 1);
+      turnIndex += 1;
+      composerInput.value = turnIndex < data.turns.length ? data.turns[turnIndex].user : "시뮬레이션이 완료되었습니다.";
+      addTypingThen(() => {
+        history.push({
+          role: turn.blocked ? "system" : "assistant",
+          sender: turn.blocked ? "운영정책 Guardrail" : "SPEC Agent",
+          text: turn.agent
+        });
+        if (turn.blocked) currentStep = data.steps.length - 1;
+      });
+      renderAll();
+    });
+
+    resetScenario("success");
+  </script>
+</body>
+</html>
